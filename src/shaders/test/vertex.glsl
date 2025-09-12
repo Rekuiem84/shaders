@@ -1,17 +1,16 @@
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 modelMatrix;
+uniform vec2 uFrequency;
+uniform float uTime;
 
 attribute vec3 position;
 
-// Custom attributes
-// Bringing the aRandom attribute from the geometry to the shader
-attribute float aRandom;
+// On prend l'attribute uv de la géométrie
+attribute vec2 uv;
 
-// Custom varyings
-// We can send data from the vertex shader to the fragment shader with varyings
-// Here we create a varying to send the aRandom attribute to the fragment shader
-varying float vRandom;
+// On passe le vUv au fragment shader
+varying vec2 vUv;
 
 void main(){
   // float a = 1.2;
@@ -26,13 +25,13 @@ void main(){
 
   // Or break it down step by step in THIS order
   vec4 modelPosition = modelMatrix * vec4(position, 1.0);
-  float intensity = 0.2;
-  modelPosition.z = aRandom * intensity;
+  modelPosition.z += sin(modelPosition.x * uFrequency.x - uTime) * 0.1;
+  modelPosition.z += sin(modelPosition.y * uFrequency.y - uTime) * 0.025;
 
   vec4 viewPosition = viewMatrix * modelPosition;
   vec4 projectedPosition = projectionMatrix * viewPosition;
   gl_Position = projectedPosition;
 
-  // We assign the aRandom attribute to the vRandom varying
-  vRandom = aRandom;
+  // On passe la valeur de l'uv au fragment shader
+  vUv = uv;
 }

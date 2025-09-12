@@ -20,6 +20,7 @@ const scene = new THREE.Scene();
  * Textures
  */
 const textureLoader = new THREE.TextureLoader();
+const flagTexture = textureLoader.load("/textures/flag-france.jpg");
 
 /**
  * Test mesh
@@ -39,17 +40,43 @@ for (let i = 0; i < count; i++) {
 // 1 means that each vertex be assigned 1 value from the array (for its displacement)
 geometry.setAttribute("aRandom", new THREE.BufferAttribute(randoms, 1));
 
+// We also need the uv attribute for textures
+// Each vertex gets 2 values from the array
+geometry.setAttribute(
+	"uv",
+	new THREE.BufferAttribute(geometry.attributes.uv.array, 2)
+);
+
 // Material
 const material = new THREE.RawShaderMaterial({
 	vertexShader: testVertexShader,
 	fragmentShader: testFragmentShader,
-	side: THREE.DoubleSide,
 	// wireframe: true,
-	transparent: true,
+	side: THREE.DoubleSide,
+	uniforms: {
+		uFrequency: { value: new THREE.Vector2(10, 5) },
+		uTime: { value: 0 },
+		uColor: { value: new THREE.Color("salmon") },
+		uTexture: { value: flagTexture },
+	},
 });
+
+gui
+	.add(material.uniforms.uFrequency.value, "x")
+	.min(0)
+	.max(20)
+	.step(0.01)
+	.name("frequencyX");
+gui
+	.add(material.uniforms.uFrequency.value, "y")
+	.min(0)
+	.max(20)
+	.step(0.01)
+	.name("frequencyY");
 
 // Mesh
 const mesh = new THREE.Mesh(geometry, material);
+mesh.scale.y = 2 / 3;
 scene.add(mesh);
 
 /**
@@ -107,6 +134,9 @@ const clock = new THREE.Clock();
 
 const tick = () => {
 	const elapsedTime = clock.getElapsedTime();
+
+	// Update the time uniform
+	material.uniforms.uTime.value = elapsedTime;
 
 	// Update controls
 	controls.update();
