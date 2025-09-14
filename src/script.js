@@ -21,7 +21,7 @@ scene.background = new THREE.Color(0x87c1ff);
  * Textures
  */
 const textureLoader = new THREE.TextureLoader();
-const flagTexture = textureLoader.load("/textures/mugiwara.png");
+const flagTexture = textureLoader.load("./textures/mugiwara.png");
 
 /**
  * Test mesh
