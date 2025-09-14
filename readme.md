@@ -1,4 +1,4 @@
-# 🖼️ Three.js – Environment map 🌐
+# 🖼️ Three.js – Shaders 🌐
 
 Custom shader développé en GLSL, pour faire une animation de flottement sur un drapeau avec [Three.js](https://threejs.org/), inspirée du parcours Three.js Journey par Bruno Simon.
 
