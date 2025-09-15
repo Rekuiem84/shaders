@@ -1,6 +1,7 @@
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 modelMatrix;
+uniform float uTime;
 
 attribute vec3 position;
 
@@ -27,6 +28,7 @@ void main(){
   // Or break it down step by step in THIS order
   vec4 modelPosition = modelMatrix * vec4(position, 1.0);
   float intensity = 0.2;
+
   modelPosition.z = aRandom * intensity;
 
   vec4 viewPosition = viewMatrix * modelPosition;

@@ -25,15 +25,18 @@ const textureLoader = new THREE.TextureLoader();
  * Test mesh
  */
 // Geometry
-const geometry = new THREE.PlaneGeometry(1, 1, 32, 32);
+const geometry = new THREE.PlaneGeometry(1, 1, 48, 48);
 
 // Create an array of random values (with as many values as there are vertices in our geometry)
 const count = geometry.attributes.position.count;
 const randoms = new Float32Array(count);
 
-for (let i = 0; i < count; i++) {
-	randoms[i] = Math.random();
+function generateRandoms() {
+	for (let i = 0; i < count; i++) {
+		randoms[i] = Math.random();
+	}
 }
+generateRandoms();
 
 // Add the array to the geometry as an attribute
 // 1 means that each vertex be assigned 1 value from the array (for its displacement)
@@ -46,11 +49,23 @@ const material = new THREE.RawShaderMaterial({
 	side: THREE.DoubleSide,
 	// wireframe: true,
 	transparent: true,
+	uniforms: {
+		uTime: { value: 0 },
+	},
 });
 
 // Mesh
 const mesh = new THREE.Mesh(geometry, material);
 scene.add(mesh);
+
+function generateNewRandoms() {
+	generateRandoms();
+	geometry.attributes.aRandom.needsUpdate = true;
+}
+
+gui
+	.add({ generateNewRandoms }, "generateNewRandoms")
+	.name("Generate new texture");
 
 /**
  * Sizes
@@ -107,6 +122,7 @@ const clock = new THREE.Clock();
 
 const tick = () => {
 	const elapsedTime = clock.getElapsedTime();
+	material.uniforms.uTime.value = elapsedTime;
 
 	// Update controls
 	controls.update();
